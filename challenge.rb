@@ -1,4 +1,4 @@
-def photos_by_city(photos)
+def group_photos_by_city(photos)
   photos_by_city = {}
   photos.each do |photo|
     name, city, datetime = photo.split(", ")
@@ -14,7 +14,7 @@ def sort_photos_by_date(photos_by_city)
   end
 end
 
-def find_index(photos, city, filename )
+def find_index_in_city_by_filename(filename, city, photos )
   photos[city].each_with_index do |photo, index|
     length = photos[city].length.to_s.length
     return "#{format("%0#{length}d", index+1)}" if photo[0] == filename
@@ -22,24 +22,32 @@ def find_index(photos, city, filename )
   nil
 end
 
+def find_index_in_city_by_datetime(datetime, city, photos )
+  photos[city].each_with_index do |photo, index|
+    length = photos[city].length.to_s.length
+    return "#{format("%0#{length}d", index+1)}" if photo[1] == datetime
+  end
+  nil
+end
+
 def solution(s)
   photos = s.split("\n")
 
-  photos_by_city = photos_by_city(photos)
+  photos_by_city = group_photos_by_city(photos)
   sorted_photos = sort_photos_by_date(photos_by_city)
 
   result = []
 
   photos.each do | photo |
-    filename, city, _ = photo.split(", ")
-    index = find_index(sorted_photos, city, filename)
+    filename, city, datetime = photo.split(", ")
+    index = find_index_in_city_by_datetime(datetime, city, sorted_photos)
     extension = filename.split(".")[1]
     result << "#{city}#{index}.#{extension}" unless index.nil?
   end
   result.join("\n")
 end
 
-list = "photo.jpg, Krakow, 2013-09-05 14:08:15
+test1 = "photo.jpg, Krakow, 2013-09-05 14:08:15
 Mike.png, London, 2015-06-20 15:13:22
 myFriends.png, Krakow, 2013-09-05 14:07:13
 Eiffel.jpg, Florianopolis, 2015-07-23 08:03:02
@@ -55,4 +63,8 @@ e.png, Krakow, 2016-01-02 09:49:09
 f.png, Krakow, 2016-01-02 10:55:32
 g.jpg, Krakow, 2016-02-29 22:13:11"
 
-puts solution(list)
+test2 = "notredame.png, Florianopolis, 2015-09-02 12:00:00
+photo.jpg, Krakow, 2013-09-05 14:08:15
+notredame.png, Florianopolis, 2015-09-01 12:00:00"
+
+puts solution(test2)
