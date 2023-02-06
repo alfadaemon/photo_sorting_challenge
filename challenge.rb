@@ -22,14 +22,6 @@ def find_index_in_city_by_filename(filename, city, photos )
   nil
 end
 
-def find_index_in_city_by_datetime(datetime, city, photos )
-  photos[city].each_with_index do |photo, index|
-    length = photos[city].length.to_s.length
-    return "#{format("%0#{length}d", index+1)}" if photo[1] == datetime
-  end
-  nil
-end
-
 def solution(s)
   photos = s.split("\n")
 
@@ -39,8 +31,8 @@ def solution(s)
   result = []
 
   photos.each do | photo |
-    filename, city, datetime = photo.split(", ")
-    index = find_index_in_city_by_datetime(datetime, city, sorted_photos)
+    filename, city, _ = photo.split(", ")
+    index = find_index_in_city_by_filename(filename, city, sorted_photos)
     extension = filename.split(".")[1]
     result << "#{city}#{index}.#{extension}" unless index.nil?
   end
@@ -63,8 +55,4 @@ e.png, Krakow, 2016-01-02 09:49:09
 f.png, Krakow, 2016-01-02 10:55:32
 g.jpg, Krakow, 2016-02-29 22:13:11"
 
-test2 = "notredame.png, Florianopolis, 2015-09-02 12:00:00
-photo.jpg, Krakow, 2013-09-05 14:08:15
-notredame.png, Florianopolis, 2015-09-01 12:00:00"
-
-puts solution(test2)
+puts solution(test1)
